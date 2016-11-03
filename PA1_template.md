@@ -1,16 +1,13 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
-```{r const}
+
+```r
 activityDataFile = "activity.csv"
 activityDataUrl  = "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 ```
 
-```{r libs}
+
+```r
 ## include libraries
 library('ggplot2')
 library('data.table')
@@ -18,15 +15,23 @@ library('data.table')
 ## Set default lang and number
 Sys.setenv(LANG = "en")
 Sys.setlocale("LC_TIME", "en_US")
+```
+
+```
+## [1] "en_US"
+```
+
+```r
 options(scipen=999)
 ```
 
 ## Loading and preprocessing the data
 
-Download the [activity data url](`r activityDataUrl`) and extract it into the file `r activityDataFile`. Then load the CSV data into a data.table.
+Download the [activity data url](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) and extract it into the file activity.csv. Then load the CSV data into a data.table.
 
 ### Loading Data
-```{r loadingData}
+
+```r
 ###
 # Loading Data
 ###
@@ -48,7 +53,8 @@ if( ! file.exists( activityDataFile ) ) {
 
 ### Preprocessing Data
 
-```{r preprocessingData}
+
+```r
 ###
 # Preprocessing Data
 ###
@@ -61,16 +67,15 @@ activityData$date <- as.Date(activityData$date,"%Y-%m-%d")
 
 1. Calculate the total number of steps taken per day
 
-```{r stepsPerDayTotalNumber}
 
+```r
 ## aggregate by the sum of steps
 activityStepsPerDay <- aggregate(steps ~ date, data = activityData, sum ,na.rm = TRUE)
-
 ```
 
 2. Make a histogram of the total number of steps taken each day
-```{r stepsPerDayTotalHistogram}
 
+```r
 ## plot the histogram
 qplot(
   activityStepsPerDay$steps,
@@ -83,24 +88,26 @@ qplot(
 )
 ```
 
-3. Calculate and report the mean and median of the total number of steps taken per day
-```{r stepsPerDayMeanAndMedia}
+![](PA1_template_files/figure-html/stepsPerDayTotalHistogram-1.png)<!-- -->
 
+3. Calculate and report the mean and median of the total number of steps taken per day
+
+```r
 ## calculate the mean and median
 activityStepsPerDay <- aggregate(steps ~ date, data = activityData, sum ,na.rm = TRUE)
 meanTotalStepsPerDay <- mean(activityStepsPerDay$steps)
 medianTotalStepsPerDay <- median(activityStepsPerDay$steps)
-
 ```
 
-The mean of total number of steps taken per day is *`r meanTotalStepsPerDay`* and the median
-is  *`r medianTotalStepsPerDay`*
+The mean of total number of steps taken per day is *10766.1886792* and the median
+is  *10765*
 
 ## What is the average daily activity pattern?
 
 1. Make a time series plot (i.e. 𝚝𝚢𝚙𝚎 = "𝚕") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
-```{r averageDailyActivity}
+
+```r
 activityAvgDailyActivity <- aggregate(steps ~ interval, data = activityData, mean ,na.rm = TRUE)
 qplot(
   x=activityAvgDailyActivity$interval,
@@ -111,11 +118,14 @@ qplot(
 )
 ```
 
+![](PA1_template_files/figure-html/averageDailyActivity-1.png)<!-- -->
+
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ## Imputing missing values
 
-```{r imputingMissingValues}
+
+```r
 missing <- !complete.cases(activityData)
 ```
 
